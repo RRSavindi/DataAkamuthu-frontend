@@ -1,3 +1,9 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .header-bar {
   background: linear-gradient(90deg, #3b82f6, #1d4ed8);
   padding: 16px 24px;
@@ -5,27 +11,31 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  flex-shrink: 0;
 }
 
 .header-bar h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: clamp(18px, 5vw, 24px);
   color: #ffffff;
   font-weight: 700;
 }
 
-/* Vertical layout: map and charts side by side at top, table below */
+/* Vertical layout: map and charts side by side */
 .top-layout {
   display: flex;
   gap: 16px;
-  padding: 16px 24px;
+  padding: 16px;
   box-sizing: border-box;
   height: calc(100vh - 72px);
+  overflow: hidden;
 }
 
 .map-panel {
   position: relative;
-  height: 100%;
+  flex: 1 1 60%;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .map-full {
@@ -35,128 +45,85 @@
 }
 
 .charts-panel {
-  flex: 1 1 35%;
-  overflow: hidden;
+  flex: 1 1 40%;
   background: #f9fafb;
   padding: 12px;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .charts-container {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  flex: 1;
-  min-height: 0;
+  gap: 8px;
 }
 
-.table-panel {
-  width: 100%;
-  padding: 16px 24px;
-  box-sizing: border-box;
-}
 
-.map-panel h1 {
-  margin: 0 0 12px;
-  font-size: 22px;
-  color: #1f2937;
-}
-
-/* Table styling */
-.table-card {
-  margin: 0;
-  padding: 16px;
-  width: 100%;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  max-height: 650px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.table-wrapper {
-  overflow-y: auto;
-  overflow-x: auto;
-  flex: 1;
-}
-
-.table-card h2 {
-  margin: 0 0 12px;
-  font-size: 20px;
-  color: #1f2937;
-  text-align: left;
-  flex-shrink: 0;
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-  color: #111827;
-}
-
-.data-table thead th {
-  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-  color: #ffffff;
-  font-weight: 700;
-  padding: 10px 12px;
-  border-bottom: 2px solid #1e40af;
-  text-align: left;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.data-table tbody td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.data-table tbody tr:nth-child(odd) {
-  background: #f9fafb;
-}
-
-.data-table tbody tr:hover {
-  background: #eff6ff;
-  transition: background 120ms ease;
-}
-
-.data-table tbody td:first-child {
-  font-weight: 600;
-}
-
-.empty-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 120px;
-  color: #4b5563;
-  font-weight: 600;
-  background: #f9fafb;
-}
 
 /* Stack on small screens */
-@media (max-width: 900px) {
-  .page-layout {
+@media (max-width: 1024px) {
+  .top-layout {
     flex-direction: column;
+    height: auto;
+  }
+
+  .map-panel {
+    flex: 1 1 100%;
+    min-height: 300px;
+  }
+
+  .charts-panel {
+    flex: 1 1 100%;
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-bar {
+    padding: 12px 16px;
+  }
+
+  .header-bar h1 {
+    font-size: clamp(16px, 4vw, 20px);
+  }
+
+  .top-layout {
+    padding: 12px;
+    gap: 12px;
   }
 
   .map-panel,
-  .table-panel {
-    flex-basis: 100%;
+  .charts-panel {
+    min-height: 350px;
+    padding: 8px;
+  }
+
+  .charts-container {
+    gap: 8px;
   }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media (max-width: 480px) {
+  .top-layout {
+    padding: 8px;
+    gap: 8px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .map-panel,
+  .charts-panel {
+    min-height: 250px;
+    padding: 4px;
+    border-radius: 8px;
+  }
+
+  .header-bar {
+    padding: 8px 12px;
+  }
+
+  .header-bar h1 {
+    font-size: clamp(14px, 3vw, 18px);
   }
 }

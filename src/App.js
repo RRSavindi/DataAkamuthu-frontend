@@ -28,24 +28,16 @@ const locationIcon = icon({
 function App() {
   const [profiles, setProfiles] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
-  const [selectedProfile, setSelectedProfile] = useState(null);
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/profiles')
-      .then(res => {
-        console.log('Profiles loaded:', res.data);  // Log for debugging
-        setProfiles(res.data);
-      })
+      .then(res => setProfiles(res.data))
       .catch(err => console.error('Error loading profiles:', err));
   }, []);
 
   const handleClick = (id, name) => {
     axios.get(`http://localhost:5000/api/profiles/${id}/data`)
-      .then(res => {
-        console.log('Data loaded for ID', id, ':', res.data);  // Log for debugging
-        setSelectedData(res.data);
-        setSelectedProfile(name);
-      })
+      .then(res => setSelectedData(res.data))
       .catch(err => console.error('Error loading data:', err));
   };
 
@@ -72,12 +64,12 @@ function App() {
   };
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <div className="header-bar">
         <h1>Weather Profiles Map</h1>
       </div>
       <div className="top-layout" style={{ flexDirection: hasData ? 'row' : 'column' }}>
-        <div className="map-panel" style={{ flex: hasData ? '1 1 65%' : '1 1 100%' }}>
+        <div className="map-panel" style={{ flex: hasData ? '1 1 60%' : '1 1 100%' }}>
           <MapContainer center={[7.87, 80.77]} zoom={8} className="map-full">
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {profiles.map(profile => {
@@ -127,9 +119,9 @@ function App() {
                   }));
 
                 return (
-                  <div key={key} style={{ marginBottom: '8px', padding: '10px', background: '#ffffff', borderRadius: '8px', border: '1px solid #e5e7eb', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <div key={key} style={{ marginBottom: '8px', padding: '10px', background: '#ffffff', borderRadius: '8px', border: '1px solid #e5e7eb', flex: 1, display: 'flex', flexDirection: 'column', minHeight: '150px' }}>
                     <h4 style={{ margin: '0 0 4px', color: '#374151', fontSize: '12px' }}>{label}</h4>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height={120}>
                       <LineChart data={seriesData} margin={{ top: 5, right: 10, bottom: 5, left: -20 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                         <XAxis dataKey="time" minTickGap={30} tick={{ fontSize: 10 }} />
@@ -145,57 +137,7 @@ function App() {
         </div>
         )}
       </div>
-
-      <div className="table-panel">
-        {hasData ? (
-          <div className="table-card">
-                <h2>Time-Series Data{selectedProfile ? ` - ${selectedProfile}` : ''}</h2>
-                <div className="table-wrapper">
-                  <table className="data-table">
-                    <thead>
-                      <tr>
-                        <th>Timestamp</th>
-                        <th>Temperature</th>
-                        <th>Humidity</th>
-                        <th>Pressure</th>
-                        {hasLightIntensity && <th>Light Intensity(%)</th>}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {selectedData
-                        .sort((a, b) => getTimeValue(b) - getTimeValue(a))
-                        .map((entry, idx) => {
-                          let dateStr = 'Invalid or Missing Date';
-                          if (entry.timestamp) {
-                            if (entry.timestamp.$date) {
-                              dateStr = new Date(entry.timestamp.$date).toLocaleString();
-                            } else if (typeof entry.timestamp === 'string') {
-                              dateStr = new Date(entry.timestamp).toLocaleString();
-                            } else if (typeof entry.timestamp === 'number') {
-                              dateStr = new Date(entry.timestamp).toLocaleString();
-                            }
-                          }
-                          return (
-                            <tr key={idx}>
-                              <td>{dateStr}</td>
-                              <td>{entry.temperature || 'N/A'}</td>
-                              <td>{entry.humidity || 'N/A'}</td>
-                              <td>{entry.pressure || 'N/A'}</td>
-                              {hasLightIntensity && <td>{entry.percentage_light_intensity || 'N/A'}</td>}
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                  </table>
-                </div>
-          </div>
-        ) : selectedData ? (
-          <div className="table-card empty-card">No time-series data available for this profile.</div>
-        ) : (
-          <div className="table-card empty-card">Click a marker to load data.</div>
-        )}
-      </div>
-    </>
+    </div>
   );
 }
 
