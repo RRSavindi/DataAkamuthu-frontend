@@ -66,7 +66,7 @@ function App() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <div className="header-bar">
-        <h1>Weather Profiles Map</h1>
+        <h1>Weather Map</h1>
       </div>
       <div className="top-layout" style={{ flexDirection: hasData ? 'row' : 'column' }}>
         <div className="map-panel" style={{ flex: hasData ? '1 1 60%' : '1 1 100%' }}>
