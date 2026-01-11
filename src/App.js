@@ -25,18 +25,21 @@ const locationIcon = icon({
   shadowSize: [41, 41]
 });
 
+const API_URL = 'http://13.53.182.22';
+
 function App() {
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
   const [profiles, setProfiles] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/profiles')
+    axios.get(`${API_URL}/api/profiles`)  
       .then(res => setProfiles(res.data))
       .catch(err => console.error('Error loading profiles:', err));
   }, []);
 
   const handleClick = (id, name) => {
-    axios.get(`http://localhost:5000/api/profiles/${id}/data`)
+    axios.get(`${API_URL}/api/profiles/${id}/data`)  
       .then(res => setSelectedData(res.data))
       .catch(err => console.error('Error loading data:', err));
   };
