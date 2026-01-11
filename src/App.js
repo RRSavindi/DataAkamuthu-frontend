@@ -25,10 +25,9 @@ const locationIcon = icon({
   shadowSize: [41, 41]
 });
 
-const API_URL = 'http://13.53.182.22';
 
 function App() {
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const API_URL = 'http://13.53.182.22';
   const [profiles, setProfiles] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
 
